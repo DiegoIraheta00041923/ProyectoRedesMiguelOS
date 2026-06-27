@@ -1,0 +1,171 @@
+## Configuración para los niveles de la empresa
+## 1. Representar el switch de capa 3 en gns3
+Para este caso se utilizaron router cisco 3725 para representar un switch, configurando en Slots NM-16ESW para obtener 16 puertos distintos, esto para 3 router  y juntos representar nuestro switch físico de capa 3 de 48 puertos, los routers se van a conectar mediante FastEthernet 1/xx configurando Enlaces Troncales para que sepan que son un camino para transportar las VLANs.
+
+En mi caso tengo los switch separados por partes Switch-Capa3p1 son los primeros 16 puertos, Switch-Capa3p2 son los siguientes 16 puertos, Switch-Capa3p3 son los últimos 16 puertos.
+
+únicamente el Switch-Capa3p1 será el que se conecte al router cisco 3725 por FE0/0
+
+Para configurar el camino anterirormente dicho se tiene que hacer para el:
+
+```txt
+Switch-Capa3p1
+```
+
+```bash
+enable
+configure terminal
+
+interface fastEthernet1/15
+switchport trunk encapsulation dot1q
+switchport mode trunk
+no shutdown
+exit
+```
+Luego para ```Switch-Capa3p2``` se realiza las conexiones entre las otras partes.
+
+```bash
+enable
+configure terminal
+
+interface fastEthernet1/14
+switchport trunk encapsulation dot1q
+switchport mode trunk
+no shutdown
+exit
+
+interface fastEthernet1/15
+switchport trunk encapsulation dot1q
+switchport mode trunk
+no shutdown
+exit
+```
+
+Y para ```Switch-Capa3p3``` se realiza las conexiones entre las otras partes.
+```bash
+enable
+configure terminal
+
+interface fastEthernet1/14
+switchport trunk encapsulation dot1q
+switchport mode trunk
+no shutdown
+exit
+```
+
+## 2. Crear las VLANs
+Para los switches hay que hacer las mismas VLAN con los mismos números en cada una de las consolas. Antes de realizarlo, debemos hacer que los routers (simulados como switches) tengan memoria suficiente, en memories and disk en PCMCIA disk0 poner 32 MiB.
+
+```bash
+config terminal
+vlan 10
+ name Administracion
+exit
+
+vlan 20
+ name Contabilidad
+exit
+
+vlan 30
+ name Recursos_Humanos
+exit
+
+vlan 40
+ name Salas_Reuniones
+exit
+
+vlan 60
+ name Invitados_WiFi
+exit
+```
+
+Ahora solo para el Switch-Capa3p1 vamos a activar el motor de enrutamiento y a crear las interfaces lógicas (gateway) donde póndras las IPs exactas de tu código.
+
+Para el gateway es recomendable usar la primera ip de la interfaz
+
+```bash
+config terminal
+ip routing
+
+Switch-Capa-3p1(config) interface vlan 10
+Switch-Capa-3p1(config-if) ip address [IP_GATEWAY_DEPARTAMENTO] [MÁSCARA_DE_RED]
+Switch-Capa-3p1(config-if) no shutdown
+Switch-Capa-3p1(config-if) exit
+
+(Interfaz virtual SVI para Contabilidad)
+Switch-Capa-3p1(config) interface vlan 20
+Switch-Capa-3p1(config-if) ip address [IP_GATEWAY_DEPARTAMENTO] [MÁSCARA_DE_RED]
+Switch-Capa-3p1(config-if) no shutdown
+Switch-Capa-3p1(config-if) exit
+```
+
+Esto hay que hacerlo para cada VLAN con sus respectivas IP.
+
+Luego va la asignación de Puertos Físicos a las VLANs.
+
+```bash
+config terminal
+(Rango de ejemplo: PC1 a PC5)
+interface range fastEthernet 1/0 - 5
+switchport mode access
+switchport access vlan 10
+exit
+
+(Otro departamento)
+interface range fastEthernet 1/6 - 8
+switchport mode access
+switchport access vlan 20
+exit
+```
+
+Para un posible Access Point debe ser un puerto Troncal. Como se determino hacer una red de Empleados y una red de invitados por el mismo cable 
+
+```bash
+config terminal
+interface fastEthernet 1/9 (el puerto que esten usando)
+switchport trunk encapsulation dot1q
+switchport mode trunk
+no shutdown
+exit
+```
+
+
+El comando para verificar es ```show vlan-switch brief``` Aunque para los switches reales se usa show vlan brief unicamente.
+
+## 3. Ip a computadoras y Access Point
+Luego se tiene que asignar las ip a cada computadora y probar ping entre departamento.
+
+
+
+## 4. ACL
+
+Se tiene que modificar las VLAN para denegar acceso a los departamentos vecinos, y solo quede localmente.
+
+Para eso solo lo realizaremos en el Switch-Capa3p1 que es el motor de enrutamiento. Por ejemplo con ADMIN:
+
+```bash
+configure terminal
+ip access-list extended FILTRO_ADMIN
+(1. Permitir el tráfico local)
+permit ip [RED_ADMIN_EJ:_192.168.10.0] [WILD_CARD] [RED_ADMIN_EJ:_192.168.10.0] [WILD_CARD]
+(2. Denegar el paso hacia las otras subredes)
+deny ip any [RED_DEP2_EJ:_192.168.20.0] [WILD_CARD]
+deny ip any [RED_DEP3_EJ:_192.168.20.0] [WILD_CARD]
+deny ip any [RED_DEP4_EJ:_192.168.20.0] [WILD_CARD]
+
+Y así sucesivamente
+
+(3. Permitir el tráfico a los demás dpto de otros niveles o internet)
+permit ip any any
+exit
+
+(4. Aplicar la ACL a la interfaz virtual )
+interface vlan 10
+ip access-group FILTRO_ADMIN in
+exit
+```
+
+Luego solo se guarda con wr.
+SE DEBE REALIZAR PARA CADA UNO DE LAS VLAN.
+
+Para la vlan de wifi unicamente hay que denegar todas las otras subredes.

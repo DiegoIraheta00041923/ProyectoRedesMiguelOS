@@ -1,0 +1,68 @@
+{
+  "edificio": {
+    "dimensiones_generales": {
+      "largo_total_m": 24,
+      "ancho_total_m": 14,
+      "notas": "El ancho total se divide en: Franja Norte (7m) + Pasillo Central (2m) + Franja Sur (5m)"
+    },
+    "niveles": [
+      {
+        "nivel": 1,
+        "zonas_norte": [
+          { "nombre": "RED", "largo_m": 3, "ancho_m": 7, "area_m2": 21, "nodos": 1 },
+          { "nombre": "VENTAS", "largo_m": 6, "ancho_m": 7, "area_m2": 42, "nodos": 7 },
+          { "nombre": "ESCALERA", "largo_m": 5, "ancho_m": 7, "area_m2": 35, "nodos": 0 },
+          { "nombre": "ATENCIÓN CLIENTE", "largo_m": 10, "ancho_m": 7, "area_m2": 70, "nodos": 6 }
+        ],
+        "zona_central": {
+          "nombre": "PASILLO CENTRAL", "largo_m": 24, "ancho_m": 2, "area_m2": 48, "nodos": 1
+        },
+        "zonas_sur": [
+          { "nombre": "RECEPCIÓN", "largo_m": 9, "ancho_m": 5, "area_m2": 45, "nodos": 2 },
+          { "nombre": "PUERTA PRINCIPAL", "largo_m": 5, "ancho_m": 5, "area_m2": 25, "nodos": 0 },
+          { "nombre": "SALA DE ESPERA", "largo_m": 6, "ancho_m": 5, "area_m2": 30, "nodos": 1 },
+          { "nombre": "WC_1", "largo_m": 2, "ancho_m": 5, "area_m2": 10, "nodos": 0 },
+          { "nombre": "WC_2", "largo_m": 2, "ancho_m": 5, "area_m2": 10, "nodos": 0 }
+        ]
+      },
+      {
+        "nivel": 2,
+        "zonas_norte": [
+          { "nombre": "RED", "largo_m": 3, "ancho_m": 7, "area_m2": 21, "nodos": 1 },
+          { "nombre": "ADMIN", "largo_m": 6, "ancho_m": 7, "area_m2": 42, "nodos": 6 },
+          { "nombre": "ESCALERA", "largo_m": 5, "ancho_m": 7, "area_m2": 35, "nodos": 0 },
+          { "nombre": "CONTABILIDAD", "largo_m": 10, "ancho_m": 7, "area_m2": 70, "nodos": 3 }
+        ],
+        "zona_central": {
+          "nombre": "PASILLO CENTRAL", "largo_m": 24, "ancho_m": 2, "area_m2": 48, "nodos": 1
+        },
+        "zonas_sur": [
+          { "nombre": "ARCHIVO", "largo_m": 3, "ancho_m": 5, "area_m2": 15, "nodos": 1 },
+          { "nombre": "RRHH", "largo_m": 6, "ancho_m": 5, "area_m2": 30, "nodos": 6 },
+          { "nombre": "SALA DE REUNIONES", "largo_m": 6, "ancho_m": 5, "area_m2": 30, "nodos": 1 },
+          { "nombre": "SALA DE JUNTAS", "largo_m": 5, "ancho_m": 5, "area_m2": 25, "nodos": 1 },
+          { "nombre": "WC_1", "largo_m": 2, "ancho_m": 5, "area_m2": 10, "nodos": 0 },
+          { "nombre": "WC_2", "largo_m": 2, "ancho_m": 5, "area_m2": 10, "nodos": 0 }
+        ]
+      },
+      {
+        "nivel": 3,
+        "zonas_norte": [
+          { "nombre": "GERENCIA", "largo_m": 9, "ancho_m": 7, "area_m2": 63, "nodos": 5 },
+          { "nombre": "ESCALERA", "largo_m": 5, "ancho_m": 7, "area_m2": 35, "nodos": 0 },
+          { "nombre": "IT", "largo_m": 10, "ancho_m": 7, "area_m2": 70, "nodos": 4 }
+        ],
+        "zona_central": {
+          "nombre": "PASILLO CENTRAL", "largo_m": 24, "ancho_m": 2, "area_m2": 48, "nodos": 1
+        },
+        "zonas_sur": [
+          { "nombre": "SERVIDORES", "largo_m": 9, "ancho_m": 5, "area_m2": 45, "nodos": 1 },
+          { "nombre": "SOPORTE TÉCNICO", "largo_m": 7, "ancho_m": 5, "area_m2": 35, "nodos": 4 },
+          { "nombre": "CÁMARA", "largo_m": 4, "ancho_m": 5, "area_m2": 20, "nodos": 3 },
+          { "nombre": "WC_1", "largo_m": 2, "ancho_m": 5, "area_m2": 10, "nodos": 0 },
+          { "nombre": "WC_2", "largo_m": 2, "ancho_m": 5, "area_m2": 10, "nodos": 0 }
+        ]
+      }
+    ]
+  }
+}
